@@ -1,0 +1,52 @@
+<div><h3>MANAGE USERS</h3>
+
+<div>
+  <div>
+    <span class="title">ID</span>
+    <input type="text" name="" [(ngModel)]="user.id" [disabled]="type == 'Edit'">
+  </div>
+  <div>
+    <span class="title">Name</span>
+    <input type="text" name="" [(ngModel)]="user.name">
+  </div>
+  <div>
+    <span class="title">Age</span>
+    <input type="text" name="" [(ngModel)]="user.age">
+  </div>
+  <div>
+    <span class="title">Sex</span>
+    <input name="sex" type="radio" value="Male" [(ngModel)]="user.sex"> Nam
+    <input name="sex" type="radio" value="Female" [(ngModel)]="user.sex"> Nu
+  </div>
+  <div>
+    <span class="title">Email</span>
+    <input type="text" name="" [(ngModel)]="user.email">
+  </div>
+  <button (click)='load()'>Refresh</button>
+  <button (click)='create()'> New user</button>
+  <button (click)='submit()'>Submit</button>
+</div>
+<div class="list-users">
+  <table class="table table-hover">
+    <thead>
+      <tr class="table-title">
+        <td>Id</td>
+        <td>Name</td>
+        <td>Sex</td>
+        <td>Age</td>
+        <td>Email</td>
+        <td></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of listUsers">
+        <td>{{user.id}}</td>
+        <td>{{user.name}}</td>
+        <td>{{user.sex == 'Male' ? 'Nam' : 'Nu'}}</td>
+        <td>{{user.age}}</td>
+        <td>{{user.email}}</td>
+        <td><button (click)='update(user.id)'>Update</button><button (click)='delete(user.id)'>Detele</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
