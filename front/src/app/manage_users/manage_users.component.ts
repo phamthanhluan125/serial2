@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UsersService } from '../services/users.service';
-
+import { CheckAuthentication } from '../services/auth.service';
 
 @Component({
   selector: 'app-manage-users',
@@ -13,7 +14,11 @@ export class ManageUsersComponent implements OnInit {
     this.load();
   }
 
-  constructor(private usersService: UsersService) { }
+  constructor(
+    private usersService: UsersService,
+    private checkAuthentication: CheckAuthentication,
+    private router: Router
+  ) { }
 
   listUsers = [];
   type = 'Add'
@@ -27,24 +32,33 @@ export class ManageUsersComponent implements OnInit {
 
   load() {
     this.usersService.getAllUsers().subscribe(response => {
-      var result = JSON.parse(response);
-      this.listUsers = result.data
+      if (this.checkAuthentication.check(response)) { return; }
+      else {
+        var result = JSON.parse(response);
+        this.listUsers = result.data
+      }
     });
   }
 
   submit() {
     if (this.type == 'Add') {
       this.usersService.addUser(this.user.id, this.user.name, this.user.sex, this.user.age, this.user.email).subscribe(response => {
-        var result = JSON.parse(response);
-        alert(result.data);
-        this.load();
+        if (this.checkAuthentication.check(response)) { return; }
+        else {
+          var result = JSON.parse(response);
+          alert(result.data);
+          this.load();
+        }
       });
     }
     else {
       this.usersService.updateUser(this.user.id, this.user.name, this.user.sex, this.user.age, this.user.email).subscribe(response => {
-        var result = JSON.parse(response);
-        alert(result.data);
-        this.load();
+        if (this.checkAuthentication.check(response)) { return; }
+        else {
+          var result = JSON.parse(response);
+          alert(result.data);
+          this.load();
+        }
       });
     }
   }
@@ -73,9 +87,22 @@ export class ManageUsersComponent implements OnInit {
 
   delete(id) {
     this.usersService.deleteUser(id).subscribe(response => {
-      var result = JSON.parse(response);
-      alert(result.data);
-      this.load();
+      if (this.checkAuthentication.check(response)) { return; }
+      else {
+        var result = JSON.parse(response);
+        alert(result.data);
+        this.load();
+      }
+    });
+  }
+
+  logout() {
+    this.usersService.logout().subscribe(response => {
+      if (this.checkAuthentication.check(response)) { return; }
+      else {
+        localStorage.removeItem('currentUser');
+        this.router.navigate(['/login']);
+      }
     });
   }
 }

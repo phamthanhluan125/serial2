@@ -40,4 +40,16 @@ export class UsersService {
     }
     return this.http.post<any>('api/update_user', params);
   }
+
+  login(email, password) {
+    var params = {
+      email: email,
+      password: password
+    }
+    return this.http.post<any>('api/login', params);
+  }
+
+  logout() {
+    return this.http.get<any>('api/logout');
+  }
 }
